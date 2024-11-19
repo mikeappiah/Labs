@@ -1,5 +1,8 @@
 const http = require('http');
 
+// Array to store list of users
+const users = ['Matthew', 'Mark', 'Luke', 'John'];
+
 const server = http.createServer((req, res) => {
 	const { method, url } = req;
 
@@ -14,29 +17,30 @@ const server = http.createServer((req, res) => {
         `);
 	} else if (url === '/users' && method === 'GET') {
 		res.writeHead(200, { 'Content-Type': 'text/html' });
+
 		res.end(`
             <h1>List of users</h1>
             <ul>
-                <li>User 1</li>
-                <li>User 2</li>
-                <li>User 3</li>
+             ${users.map((user) => `<li>${user}</li>`).join('')}
             </ul>
         `);
 	} else if (url === '/create-user' && method === 'POST') {
-		// Create user route
-
-		let body = '';
+		let body = [];
 
 		req.on('data', (chunk) => {
-			body += chunk.toString();
+			body.push(chunk);
 		}); // process chunk of data
 
 		req.on('end', () => {
-			const params = new URLSearchParams(body); // Parse the form data
-			const username = params.get('username'); // Extract the username
+			// parse request body
+			const parsedBody = Buffer.concat(body).toString();
+
+			// extract username from parsed body
+			const username = parsedBody.split('=')[1];
+
 			console.log(`New user created: ${username}`);
 
-			res.writeHead(302, { Location: '/' }); // Redirect to Home
+			res.writeHead(302, { Location: '/' }); // Redirect to homepage
 			res.end();
 		});
 	} else {
