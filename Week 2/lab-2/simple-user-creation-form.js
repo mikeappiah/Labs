@@ -27,6 +27,11 @@ const server = http.createServer((req, res) => {
 	} else if (url === '/create-user' && method === 'POST') {
 		let body = [];
 
+		req.on('error', (err) => {
+			console.error(err);
+			res.statusCode = 400;
+			res.end();
+		});
 		req.on('data', (chunk) => {
 			body.push(chunk);
 		}); // process chunk of data

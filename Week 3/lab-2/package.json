@@ -1,7 +1,7 @@
 {
-  "name": "lab-1",
+  "name": "lab-2",
   "version": "1.0.0",
-  "main": "simple-user-creation-form-express.js",
+  "main": "url-shortener-service.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -9,7 +9,9 @@
   "author": "",
   "license": "ISC",
   "description": "",
+  "type": "module",
   "dependencies": {
+    "ejs": "^3.1.10",
     "express": "^4.21.1"
   },
   "devDependencies": {
