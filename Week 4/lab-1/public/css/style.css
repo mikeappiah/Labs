@@ -1,0 +1,24 @@
+main {
+  width: 50%;
+  margin: 0 auto;
+  margin-top: 4rem;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.form-group {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.form-group:last-child {
+  margin-right: 0;
+}
+
+input::placeholder {
+  color: #6c757d;
+}

@@ -1,0 +1,62 @@
+<%- contentFor('body') %>
+
+<main>
+  <h2>Add New Book</h2>
+
+  <form action="/books/add" method="POST">
+    <div class="form-row">
+      <div class="form-group mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input
+          type="text"
+          class="form-control"
+          id="title"
+          name="title"
+          placeholder="Enter book title"
+          required
+        />
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="author" class="form-label">Author</label>
+        <input
+          type="text"
+          class="form-control"
+          id="author"
+          name="author"
+          placeholder="Enter author's name"
+          required
+        />
+      </div>
+    </div>
+
+    <!-- ISBN and Copies on the same line -->
+    <div class="form-row">
+      <div class="form-group mb-3">
+        <label for="isbn" class="form-label">ISBN</label>
+        <input
+          type="text"
+          class="form-control"
+          id="isbn"
+          name="isbn"
+          placeholder="Enter ISBN number"
+          required
+        />
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="copies" class="form-label">Number of Copies</label>
+        <input
+          type="number"
+          class="form-control"
+          id="copies"
+          name="copies"
+          placeholder="Enter number of copies"
+          required
+        />
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-dark">Create</button>
+  </form>
+</main>
