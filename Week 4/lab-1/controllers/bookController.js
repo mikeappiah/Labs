@@ -1,6 +1,6 @@
 const { validationResult, matchedData } = require('express-validator');
 const Book = require('../model/bookModel');
-const { tryCatch } = require('../utils/tryCatch');
+const tryCatch = require('../utils/tryCatch');
 const AppError = require('../utils/AppError');
 
 /* API CONTROLLERS */
@@ -44,10 +44,10 @@ exports.createBook = tryCatch(async (req, res, next) => {
 
   await Book.addBook(title, author, isbn, copies);
 
-  res.status(201).json({
-    status: 'success',
-    message: 'Book was successfully created',
-  });
+  return (
+    req.session.user.role === 'librarian' &&
+    res.redirect('/librarian/dashboard')
+  );
 });
 exports.updateBook = tryCatch(async (req, res, next) => {
   const id = +req.params.id;
@@ -60,27 +60,17 @@ exports.updateBook = tryCatch(async (req, res, next) => {
 
   await Book.editBook(id, bookDetails);
 
-  res.status(200).json({
-    status: 'success',
-    message: 'Book was successfully updated',
-  });
+  res.redirect('/librarian/dashboard');
 });
 exports.deleteBook = tryCatch(async (req, res, next) => {
   const id = +req.params.id;
 
   await Book.deleteBook(id);
 
+  res.redirect('/librarian/dashboard');
+
   res.status(204).json({
     status: 'success',
     data: null,
   });
-});
-
-/* VIEW CONTROLLERS */
-exports.renderBooksPage = tryCatch(async (req, res) => {
-  const books = await Book.getAllBooks();
-  res.render('books/list', { books });
-});
-exports.renderAddBookPage = tryCatch(async (req, res) => {
-  res.render('books/add');
 });

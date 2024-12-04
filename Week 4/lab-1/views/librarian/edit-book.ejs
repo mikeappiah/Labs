@@ -1,17 +1,17 @@
 <%- contentFor('body') %>
 
 <main>
-  <h2>Add New Book</h2>
-
-  <form action="/books/add" method="POST">
+  <h2>Update Book</h2>
+  <form action="/api/books/<%= book.id %>?_method=PATCH" method="POST">
     <div class="form-row">
       <div class="form-group mb-3">
-        <label for="title" class="form-label">Title</label>
+        <label for="title" class="form-label">Name</label>
         <input
           type="text"
           class="form-control"
           id="title"
           name="title"
+          value="<%= book.title %>"
           placeholder="Enter book title"
           required
         />
@@ -24,13 +24,13 @@
           class="form-control"
           id="author"
           name="author"
+          value="<%= book.author %>"
           placeholder="Enter author's name"
           required
         />
       </div>
     </div>
 
-    <!-- ISBN and Copies on the same line -->
     <div class="form-row">
       <div class="form-group mb-3">
         <label for="isbn" class="form-label">ISBN</label>
@@ -39,6 +39,7 @@
           class="form-control"
           id="isbn"
           name="isbn"
+          value="<%= book.isbn %>"
           placeholder="Enter ISBN number"
           required
         />
@@ -51,12 +52,13 @@
           class="form-control"
           id="copies"
           name="copies"
+          value="<%= book.copies%>"
           placeholder="Enter number of copies"
           required
         />
       </div>
     </div>
 
-    <button type="submit" class="btn btn-dark">Create</button>
+    <button type="submit" class="btn btn-dark">Edit</button>
   </form>
 </main>

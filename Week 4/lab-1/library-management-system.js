@@ -6,21 +6,23 @@ dotenv.config({ path: './config.env' });
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const session = require('express-session');
+const methodOverride = require('method-override');
 const pgSession = require('connect-pg-simple')(session);
+
 const pool = require('./config/db');
-const errorController = require('./controllers/errorController');
 
 const bookRouter = require('./routes/book/bookRoutes');
-const bookViewRouter = require('./routes/book/bookViewRoutes');
-
+const authRouter = require('./routes/user/authRoutes');
+const librarianRouter = require('./routes/user/librarianRoutes');
 const userRouter = require('./routes/user/userRoutes');
 const authViewRouter = require('./routes/user/authViewRoutes');
-
-const loanRouter = require('./routes/loan/loanRoutes');
+const transactionRouter = require('./routes/transaction/transactionRoutes');
+const errorController = require('./controllers/errorController');
 
 const app = express();
 
 app.use(express.json());
+app.use(methodOverride('_method'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressLayouts);
@@ -33,7 +35,7 @@ app.use(
     }),
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     rolling: true, // Reset cookie expiration on each request
     cookie: { maxAge: 1 * 24 * 60 * 60 * 1000 },
   }),
@@ -53,11 +55,13 @@ app.set('layout', 'layouts/main');
 
 /* API */
 app.use('/api/books', bookRouter);
-app.use('/api/auth', userRouter);
+app.use('/api/auth', authRouter);
 
 /* VIEWS */
-app.use('/books', bookViewRouter);
 app.use('/auth', authViewRouter);
+app.use('/librarian', librarianRouter);
+app.use('/user', userRouter);
+app.use('/transactions', transactionRouter);
 
 // Error handling middleware
 app.use(errorController);

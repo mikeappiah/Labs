@@ -1,0 +1,77 @@
+<%- contentFor('body') %>
+
+<div class="col-md-9 p-4">
+  <h4 class="my-4">Transactions</h4>
+
+  <% if (error) { %>
+  <div class="alert alert-danger" role="alert">
+    <%= error %>
+  </div>
+  <% } %>
+
+  <% if (transactions.length === 0) { %>
+  <div class="alert alert-warning text-center" role="alert">
+    No transactions available.
+  </div>
+  <% } else { %>
+  <div class="table-responsive">
+    <table class="table table-hover table-dark table-striped-columns table-bordered">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <% if (user.role === 'librarian') { %><th>User</th><% } %>
+          <th>Transaction Date</th>
+          <th>Return Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% transactions.forEach((transaction, index) => { %>
+        <tr>
+          <td><%= index + 1 %></td>
+          <td><%= transaction.book_title %></td>
+          <% if (user.role === 'librarian') { %>
+          <td><%= transaction.user_name %></td>
+          <% } %>
+          <td><%= new Date(transaction.transaction_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) %></td>
+          <td><%= transaction.return_date ? new Date(transaction.return_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) : 'Not Returned' %></td>
+          <td>
+            <span class="badge <%= transaction.status === 'borrowed' ? 'bg-warning' : 'bg-success' %>">
+              <%= transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1) %>
+            </span>
+          </td>
+          <td>
+            <% if (transaction.status === 'borrowed') { %>
+            <form action="/transactions/return" method="POST" class="d-inline">
+              <input type="hidden" name="transaction_id" value="<%= transaction.id %>">
+              <button type="submit" class="btn btn-sm btn-primary">Return</button>
+            </form>
+            <% } else { %>
+            <span class="text-muted"></span>
+            <% } %>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if (user.role === 'user') { %>
+  <div class="mt-4">
+    <h4>Borrow a Book</h4>
+    <form action="/transactions/borrow" method="POST" class="row g-3">
+      <div class="col-md-8">
+        <label for="book_id" class="form-label">Book ID</label>
+        <input type="number" class="form-control" id="book_id" name="book_id" required>
+      </div>
+      <div class="col-md-4 align-self-end">
+        <button type="submit" class="btn btn-success w-100">Borrow</button>
+      </div>
+    </form>
+  </div>
+  <% } %>
+</div>
+</div>
+<% } %>

@@ -60,7 +60,7 @@ exports.createUserValidationSchema = {
   },
   role: {
     isIn: {
-      options: ['user', 'librarian'],
+      options: 'librarian, user',
       errorMessage: 'Role must either be a user or a librarian',
     },
   },

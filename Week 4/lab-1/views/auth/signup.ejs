@@ -3,7 +3,7 @@
 <main>
   <h2 class="text-center mb-4">Sign Up</h2>
   <% if (error) { %>
-  <p style="color: red;"><%= error %></p>
+  <div class="alert alert-danger" role="alert"><%= error %></div>
   <% } %>
 
   <form action="/api/auth/signup" method="POST">

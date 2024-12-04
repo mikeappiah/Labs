@@ -18,12 +18,12 @@ CREATE TABLE books (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Loans Table
-CREATE TABLE loans (
+-- Transactions Table
+CREATE TABLE transactions (
     id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users(id),
     book_id INT REFERENCES books(id),
-    loan_date DATE DEFAULT CURRENT_DATE,
+    transaction_date DATE DEFAULT CURRENT_DATE,
     return_date DATE,
     status VARCHAR(20) CHECK (status IN ('borrowed', 'returned')) DEFAULT 'borrowed'
 );

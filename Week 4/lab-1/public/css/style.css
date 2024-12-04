@@ -1,3 +1,41 @@
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #2ecc71;
+  --dark-bg: #1e1e1e;
+  --light-bg: #f4f4f4;
+}
+
+body {
+  background-color: var(--light-bg);
+  font-family: 'Inter', sans-serif;
+}
+
+.navbar-custom {
+  background-color: var(--dark-bg);
+  color: #fff;
+}
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navbar-custom .nav-link {
+  color: #fff;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link.active {
+  color: var(--primary-color) !important;
+  font-weight: medium;
+}
+
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+}
 main {
   width: 50%;
   margin: 0 auto;

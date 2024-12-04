@@ -1,16 +1,8 @@
 const express = require('express');
-const { checkSchema } = require('express-validator');
-const authController = require('../../controllers/authController');
-const validationSchema = require('../../utils/validationSchema');
-
+const viewController = require('../../controllers/viewController');
 const router = express.Router();
 
-router.post(
-  '/signup',
-  checkSchema(validationSchema.createUserValidationSchema),
-  authController.signup,
-);
-
-router.post('/login', authController.login);
+// user dashboard
+router.get('/dashboard', viewController.renderUserDashboard);
 
 module.exports = router;

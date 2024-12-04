@@ -3,6 +3,7 @@
   <div>
     <h4 class="mb-2">Book Catalogue</h4>
     <div class="table-responsive">
+      
       <table class="table table-hover table-dark table-striped-columns table-bordered">
         <thead>
           <tr>
@@ -10,7 +11,6 @@
             <th>Author</th>
             <th>ISBN</th>
             <th>Total Copies</th>
-            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -20,23 +20,10 @@
             <td><%= book.author %></td>
             <td><%= book.isbn %></td>
             <td><%= book.copies %></td>
-            <td>
-              <a href="/librarian/books/edit/<%= book.id %>" class="btn btn-sm btn-warning btn-action me-2">
-                Edit
-              </a>
-              <form action="/api/books/<%= book.id %>?_method=DELETE" method="POST" style="display: inline-block;">
-                <button type="submit" class="btn btn-sm btn-danger btn-action">
-                  Delete
-                </button>
-              </form>
-            </td>
           </tr>
           <% }); %>
         </tbody>
       </table>
-      <a href="/librarian/books/add" class="btn btn-dark btn-action">
-        Add Book
-      </a>
     </div>
   </div>
 </div>
