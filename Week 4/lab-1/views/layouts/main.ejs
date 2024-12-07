@@ -15,7 +15,7 @@
       <a class="navbar-brand text-white" href="/">LMS</a>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
-          <% if (user.role === 'librarian') { %>
+          <% if (user?.role === 'librarian') { %>
            <li class="nav-item">
             <a class="nav-link" href="/librarian/dashboard">
               Dashboard
@@ -39,7 +39,7 @@
           </li>
         </ul>
         <ul class="navbar-nav">
-          <span><%= user && user.name %></span>
+          <span><%= user?.name %></span>
           <% if (user) { %>
           <li class="nav-item">
             <a class="nav-link" href="/api/auth/logout"> Logout </a>

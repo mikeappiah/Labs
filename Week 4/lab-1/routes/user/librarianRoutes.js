@@ -9,6 +9,7 @@ router.use(authController.isAuthenticated);
 router.use(authController.isLibrarian);
 
 router.get('/dashboard', viewController.renderLibrarianDashboard);
+router.get('/reports', viewController.renderReportPage);
 router.get('/books/add', viewController.renderAddBookPage);
 router.get('/books/edit/:id', viewController.renderEditBookPage);
 

@@ -1,0 +1,57 @@
+<%- contentFor('body') %>
+<div class="container mt-5">
+  <h1 class="text-center mb-4">Library Reports</h1>
+
+  <% if (error) { %>
+  <div class="alert alert-danger" role="alert">
+    <%= error %>
+  </div>
+  <% } else { %>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Total Books</h5>
+          <p class="card-text display-4"><%= reportData.totalBooks %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Books Borrowed</h5>
+          <p class="card-text display-4"><%= reportData.totalBorrowed %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Overdue Books</h5>
+          <p class="card-text display-4"><%= reportData.overdueBooks %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <h2 class="mb-3">User Activity</h2>
+    <table class="table table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>User Name</th>
+          <th>Books Borrowed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% reportData.userActivities.forEach(user => { %>
+        <tr>
+          <td><%= user.name %></td>
+          <td><%= user.borrowed_books %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+</div>

@@ -1,5 +1,6 @@
 const Book = require('../model/bookModel');
 const Transaction = require('../model/transactionModel');
+const Report = require('../model/reportModel');
 const tryCatch = require('../utils/tryCatch');
 
 /* AUTH */
@@ -41,4 +42,9 @@ exports.renderTransactionsPage = tryCatch(async (req, res) => {
       : await Transaction.getUserTransactions(user.id);
 
   res.render('transactions/all', { transactions, user, error: null });
+});
+
+exports.renderReportPage = tryCatch(async (req, res) => {
+  const reportData = await Report.getReportData();
+  res.render('reports/index', { reportData, error: null });
 });
