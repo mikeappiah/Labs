@@ -42,6 +42,20 @@ class Book {
   static async deleteBook(id) {
     await pool.query('DELETE FROM books WHERE id = $1', [id]);
   }
+
+  /* Method to search for a book */
+  static async searchBooks(searchQuery) {
+    const query = `
+    SELECT * 
+    FROM books 
+    WHERE 
+      title ILIKE $1 OR 
+      author ILIKE $1 
+  `;
+
+    const result = await pool.query(query, [`%${searchQuery}%`]);
+    return result.rows;
+  }
 }
 
 module.exports = Book;

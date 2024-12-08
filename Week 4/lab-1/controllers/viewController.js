@@ -3,12 +3,11 @@ const Transaction = require('../model/transactionModel');
 const Report = require('../model/reportModel');
 const tryCatch = require('../utils/tryCatch');
 
-/* AUTH */
 exports.renderSignupPage = (req, res) =>
-  res.render('auth/signup', { error: null });
+  res.render('auth/signup', { error: null, layout: false });
 
 exports.renderLoginPage = (req, res) =>
-  res.render('auth/login', { error: null });
+  res.render('auth/login', { error: null, layout: false });
 
 exports.renderLibrarianDashboard = tryCatch(async (req, res) => {
   const books = await Book.getAllBooks();

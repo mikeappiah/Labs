@@ -3,7 +3,6 @@ const Book = require('../model/bookModel');
 const tryCatch = require('../utils/tryCatch');
 const AppError = require('../utils/AppError');
 
-/* API CONTROLLERS */
 exports.getAllBooks = tryCatch(async (req, res, next) => {
   const books = await Book.getAllBooks();
 
@@ -49,6 +48,7 @@ exports.createBook = tryCatch(async (req, res, next) => {
     res.redirect('/librarian/dashboard')
   );
 });
+
 exports.updateBook = tryCatch(async (req, res, next) => {
   const id = +req.params.id;
   const bookDetails = {};
@@ -74,3 +74,25 @@ exports.deleteBook = tryCatch(async (req, res, next) => {
     data: null,
   });
 });
+
+exports.searchForBooks = async (req, res) => {
+  const { searchQuery } = req.query;
+
+  try {
+    if (!searchQuery || searchQuery.trim() === '') {
+      return res.render('user/search', {
+        books: [],
+        error: 'Please enter a search query.',
+      });
+    }
+
+    const books = await Book.searchBooks(searchQuery);
+    console.log(books);
+    res.render('user/search', { books, error: null });
+  } catch (err) {
+    res.status(500).render('user/search', {
+      books: [],
+      error: 'An error occurred while searching for books.',
+    });
+  }
+};

@@ -16,27 +16,33 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <% if (user?.role === 'librarian') { %>
-           <li class="nav-item">
+          <li class="nav-item">
             <a class="nav-link" href="/librarian/dashboard">
               Dashboard
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/librarian/reports"> Reports </a>
+          </li>
           <% } else {%>
-              <li class="nav-item">
+          <li class="nav-item">
             <a class="nav-link" href="/user/dashboard">
               Dashboard
             </a>
           </li>
-            <% } %>
-          
+          <% } %>
+
           <li class="nav-item">
             <a class="nav-link" href="/transactions/all">
               Transactions
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/librarian/reports"> Reports </a>
+            <a class="nav-link" href="/user/search">
+              Search
+            </a>
           </li>
+
         </ul>
         <ul class="navbar-nav">
           <span><%= user?.name %></span>
@@ -49,7 +55,7 @@
             <a class="nav-link" href="/auth/login"> Login </a>
           </li>
           <% } %>
-          
+
         </ul>
       </div>
     </div>

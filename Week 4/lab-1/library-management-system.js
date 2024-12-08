@@ -58,10 +58,14 @@ app.use('/api/books', bookRouter);
 app.use('/api/auth', authRouter);
 
 /* VIEWS */
+
 app.use('/auth', authViewRouter);
 app.use('/librarian', librarianRouter);
 app.use('/user', userRouter);
 app.use('/transactions', transactionRouter);
+app.use('/', (req, res) => {
+  res.render('home', { layout: false });
+});
 
 // Error handling middleware
 app.use(errorController);

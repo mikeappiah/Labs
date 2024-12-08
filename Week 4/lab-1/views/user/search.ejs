@@ -1,0 +1,60 @@
+<% contentFor('body') %>
+
+<div class="container mt-5">
+  <h1 class="text-center mb-4">Search for Books</h1>
+
+  <form action="/user/search" method="GET" class="mb-4">
+    <div class="input-group">
+      <input 
+        type="text" 
+        class="form-control" 
+        name="searchQuery" 
+        placeholder="Search by title, author, or genre" 
+        value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>" 
+        required
+      >
+      <button type="submit" class="btn btn-dark">Search</button>
+    </div>
+  </form>
+
+  <% if (error) { %>
+    <div class="alert alert-danger" role="alert">
+      <%= error %>
+    </div>
+  <% } %>
+
+ 
+  <% if (books.length > 0) { %>
+    <h2>Search Results</h2>
+    <table class="table table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Copies</th>
+          <th>Isbn</th>
+          <th>Availability</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% books.forEach(book => { %>
+          <tr>
+            <td><%= book.title %></td>
+            <td><%= book.author %></td>
+            <td><%= book.copies %></td>
+            <td><%= book.isbn %></td>
+            <td>
+              <span class="badge <%= book.copies > 0 ? 'bg-success' : 'bg-danger' %>">
+                <%= book.copies > 0 ? 'Available' : 'Out of Stock' %>
+              </span>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } else if (typeof books !== 'undefined' && books.length === 0) { %>
+    <div class="alert alert-warning" role="alert">
+      No books found matching your search query.
+    </div>
+  <% } %>
+</div>
