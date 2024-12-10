@@ -1,0 +1,10 @@
+<%- include('partials/head.ejs') %> <%- include('partials/nav.ejs') %>
+<div>
+  <form action="/products/search" method="GET" class="mt-2 px-5 py-20 md:w-2/3 lg:w-1/2 mx-auto">
+    <div class="flex items-center gap-3">
+      <input type="text" name="name" id="name" required placeholder="Enter product name" class="block w-full rounded-sm bg-white px-3 py-2 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+      <button class="text-white bg-indigo-600 px-3 py-2 rounded-sm text-sm">Search</button>
+    </div>
+  </form>
+</div>
+<%- include('partials/end.ejs') %>

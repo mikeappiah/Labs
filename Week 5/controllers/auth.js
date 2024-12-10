@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const User = require('../model/userModel');
+const User = require('../model/user');
 
 const signToken = (payload) =>
   jwt.sign(payload, process.env.JWT_SECRET, {
@@ -74,7 +74,7 @@ exports.login = async (req, res, next) => {
   }
 };
 
-exports.logoutUser = (req, res) => {
+exports.logout = (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       return console.log(err);
@@ -94,8 +94,7 @@ exports.protect = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded.user;
-    console.log(req.user);
-
+    res.locals.user = req.user || null;
     next();
   } catch (error) {
     console.log(error);

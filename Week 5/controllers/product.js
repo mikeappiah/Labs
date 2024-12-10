@@ -1,24 +1,32 @@
-const Product = require('../model/productModel');
+const Product = require('../model/product');
 
 exports.getAllProducts = async (req, res) => {
   try {
     const products = await Product.find();
     return products;
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
   }
 };
 
-exports.getProduct = async (req, res) => {
+exports.findProduct = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const { name } = req.query;
 
-    res.status(200).json({
-      status: 'success',
-      data: product,
+    if (!name || name.trim() === '') {
+      return res.status(200).render('search-product', {
+        products: [],
+        error: 'Please enter a search query.',
+      });
+    }
+    const products = await Product.find({ name });
+    console.log(products);
+    res.render('search-product', { products, error: null });
+  } catch (err) {
+    res.status(500).render('search-product', {
+      products: [],
+      error: 'An error occurred while searching for books.',
     });
-  } catch (error) {
-    console.log(error);
   }
 };
 
@@ -40,36 +48,29 @@ exports.createProduct = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
   try {
-    const updatedProduct = await Product.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-      },
-    );
-    res.status(200).json({
-      status: 'success',
-      data: updatedProduct,
+    if (req.file) {
+      req.body.photo = `/uploads/${req.file.filename}`;
+    }
+    await Product.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
     });
+    res.redirect('/');
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
   }
 };
 
 exports.deleteProduct = async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.id);
-    res.status(200).json({
-      status: 'success',
-      data: null,
-    });
+    res.redirect('/');
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
   }
 };
 
-exports.getProductsByCategory = async () => {
+exports.groupProductsIntoCategories = async () => {
   try {
     const products = await Product.find({}).lean();
 
@@ -84,6 +85,5 @@ exports.getProductsByCategory = async () => {
     return categorizedProducts;
   } catch (error) {
     console.error(error.message);
-    return {};
   }
 };
