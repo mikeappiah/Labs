@@ -1,0 +1,21 @@
+<nav class="bg-indigo-600">
+  <div class="py-5 px-5 flex items-center justify-between w-full">
+    <h1 class="text-white font-medium">PMS</h1>
+
+    <div class="flex space-x-4">
+      <a href="/" class="text-[0.9rem] font-medium text-white hover:text-gray-900" aria-current="page">Home</a>
+      <a href="/shop" class="text-[0.9rem] font-medium text-white hover:text-gray-900">Shop</a>
+      <% if (user.role==='admin') { %>
+      <a href="/products/add" class="text-[0.9rem] font-medium text-white hover:text-gray-900">Add Product</a>
+      <% } %>
+    </div>
+
+    <div class="flex items-center space-x-4">
+      <a href="/auth/login" class="text-[0.9rem] font-medium text-white hover:text-gray-900">Log in</a>
+      <div>
+        <img class="size-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+      </div>
+    </div>
+  </div>
+  </div>
+</nav>

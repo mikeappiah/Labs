@@ -1,0 +1,40 @@
+<div class="px-5 py-20">
+  <h2 class="text-4xl mb-5 font-medium uppercase text-center">Browse Collections</h2>
+  <ul class="flex flex-wrap mb-10 justify-center items-center space-x-4 [&>li>a]:text-xs [&>li>a]:font-medium hover:[&>li>a]:text-indigo-600">
+    <li>
+      <a href="/products/fashion">Fashion</a>
+    </li>
+    <li>
+      <a href="/products/electronics">Electronics</a>
+    </li>
+    <li>
+      <a href="/products/booksandmedia">Books and Media</a>
+    </li>
+    <li>
+      <a href="/products/foodandbeverages">Food and Beverages</a>
+    </li>
+    <li>
+      <a href="/products/automotive">Automotive</a>
+    </li>
+    <li>
+      <a href="/products/toysandgames">Toys and Games</a>
+    </li>
+  </ul>
+  <% Object.keys(categorizedProducts).forEach(category => { %>
+  <div class="mb-12">
+    <a href="/products/<%= category %>" class="inline-block hover:text-indigo-600 mb-5 font-medium">
+      Explore <%= category.at(0).toUpperCase() + category.slice(1) %>
+    </a>
+
+    <div class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+      <% categorizedProducts[category].slice(0, 4).forEach(product => { %>
+      <a href="/product/<%= product._id %>" class="group">
+        <img src="<%= product.photo %>" alt="<%= product.name %>" class="aspect-square w-full rounded bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]">
+        <h3 class="mt-4 text-sm text-gray-700"><%= product.name %></h3>
+        <p class="mt-1 text-lg font-medium text-gray-900">GH₵<%= product.price %></p>
+      </a>
+      <% }); %>
+    </div>
+  </div>
+  <% }); %>
+</div>
