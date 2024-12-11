@@ -19,7 +19,9 @@ exports.findProduct = async (req, res) => {
         error: 'Please enter a search query.',
       });
     }
-    const products = await Product.find({ name });
+    const products = await Product.find({
+      name: { $regex: name, $options: 'i' },
+    });
     console.log(products);
     res.render('search-product', { products, error: null });
   } catch (err) {
