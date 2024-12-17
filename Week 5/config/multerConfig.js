@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({
-  storage: storage,
+  storage,
   fileFilter: function (req, file, cb) {
     const ext = path.extname(file.originalname).toLowerCase();
     if (
