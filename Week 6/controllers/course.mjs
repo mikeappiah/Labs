@@ -8,9 +8,7 @@ export const getAllCourses = asyncHandler(async (req, res) => {
   res.status(200).json({
     status: 'success',
     results: courses.length,
-    data: {
-      data: courses,
-    },
+    data: courses,
   });
 });
 
@@ -22,9 +20,7 @@ export const getCourse = asyncHandler(async (req, res, next) => {
   }
   res.status(200).json({
     status: 'success',
-    data: {
-      data: course,
-    },
+    data: course,
   });
 });
 
@@ -33,9 +29,7 @@ export const createCourse = asyncHandler(async (req, res) => {
 
   res.status(201).json({
     status: 'success',
-    data: {
-      data: newCourse,
-    },
+    data: newCourse,
   });
 });
 
@@ -55,9 +49,7 @@ export const updateCourse = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    data: {
-      data: course,
-    },
+    data: course,
   });
 });
 

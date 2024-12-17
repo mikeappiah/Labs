@@ -33,6 +33,9 @@ const studentSchema = new mongoose.Schema({
   ],
 });
 
+studentSchema.index({ gpa: 1 });
+studentSchema.index({ grade: 1 });
+
 const Student = User.discriminator('Student', studentSchema);
 
 export default Student;

@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import swaggerUi from 'swagger-ui-express';
 import logger from './utils/logger.mjs';
+
 import swaggerDocument from './config/swagger.mjs';
 
 import authRouter from './routes/auth.mjs';
@@ -9,6 +10,7 @@ import studentRouter from './routes/student.mjs';
 import instructorRouter from './routes/instructor.mjs';
 import courseRouter from './routes/course.mjs';
 import enrollmentRouter from './routes/enrollment.mjs';
+import sortRouter from './routes/sort.mjs';
 
 import globalErrorHandler from './controllers/error.mjs';
 import AppError from './utils/AppError.mjs';
@@ -39,6 +41,7 @@ app.use('/api/students', studentRouter);
 app.use('/api/instructors', instructorRouter);
 app.use('/api/courses', courseRouter);
 app.use('/api/enrollments', enrollmentRouter);
+app.use('/api/sort', sortRouter);
 
 /* error handling */
 app.all('*', (req, res, next) => {

@@ -15,9 +15,7 @@ export const getAllStudents = asyncHandler(async (req, res) => {
   res.status(200).json({
     status: 'success',
     results: students.length,
-    data: {
-      data: students,
-    },
+    data: students,
   });
 });
 
@@ -30,9 +28,7 @@ export const getStudent = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    data: {
-      data: student,
-    },
+    data: student,
   });
 });
 
@@ -41,9 +37,7 @@ export const createStudent = asyncHandler(async (req, res) => {
 
   res.status(201).json({
     status: 'success',
-    data: {
-      data: newStudent,
-    },
+    data: newStudent,
   });
 });
 
@@ -59,9 +53,7 @@ export const updateStudent = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    data: {
-      data: student,
-    },
+    data: student,
   });
 });
 

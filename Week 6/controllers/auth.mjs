@@ -34,9 +34,7 @@ const createSendToken = (user, statusCode, res) => {
   res.status(statusCode).json({
     status: 'success',
     token,
-    data: {
-      user,
-    },
+    data: user,
   });
 };
 
@@ -45,9 +43,7 @@ export const signup = asyncHandler(async (req, res, next) => {
 
   res.status(201).json({
     status: 'success',
-    data: {
-      data: newStudent,
-    },
+    data: newStudent,
   });
 
   createSendToken(newStudent, 201, res);

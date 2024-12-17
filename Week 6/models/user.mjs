@@ -85,6 +85,9 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   return false;
 };
 
+userSchema.index({ firstName: 1, lastName: 1 });
+userSchema.index({ phoneNumber: 1 });
+
 const User = mongoose.model('User', userSchema);
 
 export default User;

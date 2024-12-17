@@ -17,6 +17,7 @@
         "spaced-comment": "off",
         "no-console": "warn",
         "consistent-return": "off",
+        "allowForLoopAfterthoughts": true,
         "func-names": "off",
         "object-shorthand": "off",
         "no-process-exit": "off",

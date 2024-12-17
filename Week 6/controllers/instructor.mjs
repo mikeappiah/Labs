@@ -7,9 +7,7 @@ export const getAllInstructors = asyncHandler(async (req, res) => {
   res.status(200).json({
     status: 'success',
     results: instructors.length,
-    data: {
-      data: instructors,
-    },
+    data: instructors,
   });
 });
 
@@ -18,8 +16,6 @@ export const createInstructor = asyncHandler(async (req, res) => {
 
   res.status(201).json({
     status: 'success',
-    data: {
-      data: newInstructor,
-    },
+    data: newInstructor,
   });
 });

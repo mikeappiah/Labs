@@ -10,7 +10,7 @@ export const getAllEnrollments = asyncHandler(async (req, res) => {
   res.status(200).json({
     status: 'success',
     results: enrollments.length,
-    data: { data: enrollments },
+    data: enrollments,
   });
 });
 
@@ -44,7 +44,7 @@ export const createEnrollment = asyncHandler(async (req, res, next) => {
 
   res.status(201).json({
     status: 'success',
-    data: { data: newEnrollment },
+    data: newEnrollment,
   });
 });
 
@@ -61,7 +61,7 @@ export const getAllStudentCourses = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    data: { data: courses },
+    data: courses,
   });
 });
 
@@ -83,7 +83,7 @@ export const getAllCourseStudents = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    data: { data: students },
+    data: students,
   });
 });
 
