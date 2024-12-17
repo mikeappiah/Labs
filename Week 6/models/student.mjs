@@ -14,6 +14,17 @@ const studentSchema = new mongoose.Schema({
       message: (props) => `${props.value} is not a valid student email!`,
     },
   },
+  grade: {
+    type: String,
+    required: [true, 'A student must have a grade'],
+    enum: ['1st Year', '2nd Year', '3rd Year', '4th Year'],
+  },
+  gpa: {
+    type: Number,
+    min: [1.0, 'gpa must be 1.0 or above'],
+    max: [4.0, 'gpa must be 4.0 or below'],
+    default: 1.0,
+  },
   courses: [
     {
       type: mongoose.Schema.ObjectId,

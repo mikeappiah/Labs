@@ -1,9 +1,16 @@
 import Student from '../models/student.mjs';
 import asyncHandler from '../utils/asyncHandler.mjs';
 import AppError from '../utils/AppError.mjs';
+import APIFeatures from '../utils/APIFeatures.mjs';
 
 export const getAllStudents = asyncHandler(async (req, res) => {
-  const students = await Student.find();
+  const features = new APIFeatures(Student.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+
+  const students = await features.query;
 
   res.status(200).json({
     status: 'success',
