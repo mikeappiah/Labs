@@ -4,10 +4,15 @@ import Student from '../models/student.mjs';
 import Course from '../models/course.mjs';
 import redisClient from '../config/redisClient.mjs';
 import logger from '../utils/logger.mjs';
+import AppError from '../utils/AppError.mjs';
 
 const sortData = (Model) =>
   asyncHandler(async (req, res, next) => {
     const { field, order = 'asc' } = req.query;
+
+    if (!field || !order) {
+      next(new AppError('Field or order query missing', 400));
+    }
 
     /* cache key generation */
     const cacheKey = `${Model.modelName}_sorted_${field}_${order}`;
