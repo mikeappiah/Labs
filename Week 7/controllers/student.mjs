@@ -1,17 +1,15 @@
 import Student from '../models/student.mjs';
 import asyncHandler from '../utils/asyncHandler.mjs';
 import AppError from '../utils/AppError.mjs';
+import APIFeatures from '../utils/APIFeatures.mjs';
 
 export const getAllStudents = asyncHandler(async (req, res) => {
-  const page = parseInt(req.query.page, 10) || 1;
-  const limit = parseInt(req.query.limit, 10) || 100;
-  const skip = (page - 1) * limit;
+  const features = new APIFeatures(Student.find(), req.query)
+    .filter()
+    .limitFields()
+    .paginate();
 
-  if (page < 1 || limit < 1) {
-    return next(new AppError('Invalid page or limit parameter', 400));
-  }
-
-  const students = await Student.find().skip(skip).limit(limit);
+  const students = await features.query;
 
   res.status(200).json({
     status: 'success',

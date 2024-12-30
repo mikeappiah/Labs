@@ -1,0 +1,982 @@
+openapi: 3.0.0
+info:
+  title: Student Management System
+  version: 1.0.0
+  description: An API documentation using Swagger for a student management system
+servers:
+  - url: 'http://localhost:8000'
+paths:
+  /api/auth/signup:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user
+      description: Create a new user account.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: 'StrongPassword123!'
+      responses:
+        201:
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 60f5a2d9a3b8c33b94e50e8b
+                      email:
+                        type: string
+                        example: user@example.com
+        400:
+          description: Bad request
+        500:
+          description: Server error
+
+  /api/auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login a user
+      description: Authenticate a user and return a JWT token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: 'StrongPassword123!'
+      responses:
+        200:
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  token:
+                    type: string
+                    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 60f5a2d9a3b8c33b94e50e8b
+                      email:
+                        type: string
+                        example: user@example.com
+        400:
+          description: Missing email or password
+        401:
+          description: Incorrect email or password
+
+  /api/auth/forgot-password:
+    post:
+      tags:
+        - Authentication
+      summary: Request a password reset link
+      description: Send a password reset link to the user's email address.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+      responses:
+        200:
+          description: Password reset link sent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: >-
+                      Submit a PATCH request with your new password to:
+                      http://localhost:8000/api/auth/password-reset/{token}
+        404:
+          description: User not found
+
+  /api/auth/password-reset/{token}:
+    patch:
+      tags:
+        - Authentication
+      summary: Reset user password
+      description: Reset the user's password using the reset token.
+      parameters:
+        - name: token
+          in: path
+          required: true
+          description: Password reset token
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - password
+                - passwordConfirm
+              properties:
+                password:
+                  type: string
+                  format: password
+                  example: 'NewStrongPassword123!'
+                passwordConfirm:
+                  type: string
+                  format: password
+                  example: 'NewStrongPassword123!'
+      responses:
+        200:
+          description: Password reset successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  token:
+                    type: string
+                    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 60f5a2d9a3b8c33b94e50e8b
+                      email:
+                        type: string
+                        example: user@example.com
+        400:
+          description: Invalid or expired token
+  /api/students:
+    get:
+      summary: Retrieve all students
+      tags:
+        - Students
+      responses:
+        '200':
+          description: A JSON array of all students
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentListResponse'
+              examples:
+                application/json:
+                  value:
+                    status: success
+                    results: 2
+                    data:
+                      - _id: '603c72ef9b1d8b4f8f5b9b1b'
+                        name: 'John Doe'
+                        email: 'john.doe@st.university.edu'
+                        phone: '+1234567890'
+                      - _id: '603c72ef9b1d8b4f8f5b9b2c'
+                        name: 'Jane Smith'
+                        email: 'jane.smith@st.university.edu'
+                        phone: '+1987654321'
+    post:
+      summary: Create a new student
+      tags:
+        - Students
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentCreateRequest'
+            example:
+              name: 'Alice Cooper'
+              email: 'alice.cooper@st.university.edu'
+              phone: '+1122334455'
+      responses:
+        '201':
+          description: Student created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentResponse'
+              example:
+                status: success
+                data:
+                  _id: '603c72ef9b1d8b4f8f5b9b3d'
+                  name: 'Alice Cooper'
+                  email: 'alice.cooper@st.university.edu'
+                  phone: '+1122334455'
+  /api/students/{id}:
+    get:
+      summary: Retrieve a specific student by ID
+      tags:
+        - Students
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            example: '603c72ef9b1d8b4f8f5b9b1b'
+      responses:
+        '200':
+          description: A JSON object of the student data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentResponse'
+              example:
+                status: success
+                data:
+                  _id: '603c72ef9b1d8b4f8f5b9b1b'
+                  name: 'John Doe'
+                  email: 'john.doe@st.university.edu'
+                  phone: '+1234567890'
+        '404':
+          description: Student not found
+    put:
+      summary: Update a student by ID
+      tags:
+        - Students
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            example: '603c72ef9b1d8b4f8f5b9b1b'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentCreateRequest'
+            example:
+              name: 'Johnathan Doe'
+              email: 'johnathan.doe@st.university.edu'
+              phone: '+1234567899'
+      responses:
+        '200':
+          description: Student updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentResponse'
+              example:
+                status: success
+                data:
+                  _id: '603c72ef9b1d8b4f8f5b9b1b'
+                  name: 'Johnathan Doe'
+                  email: 'johnathan.doe@st.university.edu'
+                  phone: '+1234567899'
+        '404':
+          description: Student not found
+    delete:
+      summary: Delete a student by ID
+      tags:
+        - Students
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            example: '603c72ef9b1d8b4f8f5b9b1b'
+      responses:
+        '204':
+          description: Student deleted successfully
+        '404':
+          description: Student not found
+  /api/instructors:
+    get:
+      summary: Retrieve all instructors
+      tags:
+        - Instructors
+      responses:
+        '200':
+          description: A JSON array of all instructors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstructorListResponse'
+              examples:
+                application/json:
+                  value:
+                    status: success
+                    results: 1
+                    data:
+                      - _id: '603c72ef9b1d8b4f8f5b9b3d'
+                        name: 'Dr. Michael Brown'
+                        department: 'Computer Science'
+                        email: 'michael.brown@staff.university.edu'
+                        phone: '+1020304050'
+    post:
+      summary: Create a new instructor
+      tags:
+        - Instructors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstructorCreateRequest'
+            example:
+              name: 'Dr. Sarah Green'
+              department: 'Mathematics'
+              email: 'sarah.green@staff.university.edu'
+              phone: '+1102030405'
+      responses:
+        '201':
+          description: Instructor created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstructorResponse'
+              example:
+                status: success
+                data:
+                  _id: '603c72ef9b1d8b4f8f5b9b3e'
+                  name: 'Dr. Sarah Green'
+                  department: 'Mathematics'
+                  email: 'sarah.green@staff.university.edu'
+                  phone: '+1102030405'
+  /api/instructors/{id}:
+    get:
+      summary: Retrieve a specific instructor by ID
+      tags:
+        - Instructors
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            example: '603c72ef9b1d8b4f8f5b9b3d'
+      responses:
+        '200':
+          description: A JSON object of the instructor data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstructorResponse'
+              example:
+                status: success
+                data:
+                  _id: '603c72ef9b1d8b4f8f5b9b3d'
+                  name: 'Dr. Michael Brown'
+                  department: 'Computer Science'
+                  email: 'michael.brown@staff.university.edu'
+                  phone: '+1020304050'
+        '404':
+          description: Instructor not found
+    put:
+      summary: Update an instructor by ID
+      tags:
+        - Instructors
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            example: '603c72ef9b1d8b4f8f5b9b3d'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstructorCreateRequest'
+            example:
+              name: 'Dr. Michael Brown'
+              department: 'Computer Engineering'
+              email: 'michael.brown@staff.university.edu'
+              phone: '+1020304050'
+      responses:
+        '200':
+          description: Instructor updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstructorResponse'
+              example:
+                status: success
+                data:
+                  _id: '603c72ef9b1d8b4f8f5b9b3d'
+                  name: 'Dr. Michael Brown'
+                  department: 'Computer Engineering'
+                  email: 'michael.brown@staff.university.edu'
+                  phone: '+1020304050'
+        '404':
+          description: Instructor not found
+    delete:
+      summary: Delete an instructor by ID
+      tags:
+        - Instructors
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            example: '603c72ef9b1d8b4f8f5b9b3d'
+      responses:
+        '204':
+          description: Instructor deleted successfully
+        '404':
+          description: Instructor not found
+  /api/courses:
+    get:
+      summary: Retrieve all courses
+      tags:
+        - Courses
+      responses:
+        '200':
+          description: A JSON array of all courses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseListResponse'
+              examples:
+                application/json:
+                  value:
+                    status: success
+                    results: 1
+                    data:
+                      - _id: '603c72ef9b1d8b4f8f5b9b5f'
+                        name: 'Introduction to Programming'
+                        code: 'CS101'
+                        description: 'A basic course on programming.'
+                        department: 'Computer Science'
+                        credits: 3
+                        instructors:
+                          - '603c72ef9b1d8b4f8f5b9b3d'
+    post:
+      summary: Create a new course
+      tags:
+        - Courses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseCreateRequest'
+            example:
+              name: 'Data Structures'
+              code: 'CS102'
+              description: 'A course on data structures.'
+              department: 'Computer Science'
+              credits: 4
+              instructors: ['603c72ef9b1d8b4f8f5b9b3d']
+      responses:
+        '201':
+          description: Course created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseResponse'
+              example:
+                status: success
+                data:
+                  _id: '603c72ef9b1d8b4f8f5b9b5f'
+                  name: 'Data Structures'
+                  code: 'CS102'
+                  description: 'A course on data structures.'
+                  department: 'Computer Science'
+                  credits: 4
+                  instructors:
+                    - '603c72ef9b1d8b4f8f5b9b3d'
+  /api/enrollments:
+    get:
+      summary: Retrieve all enrollments
+      tags:
+        - Enrollments
+      responses:
+        '200':
+          description: A JSON array of all enrollments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnrollmentListResponse'
+              examples:
+                application/json:
+                  value:
+                    status: success
+                    results: 2
+                    data:
+                      - student: '603c72ef9b1d8b4f8f5b9b1b'
+                        course: '603c72ef9b1d8b4f8f5b9b5f'
+                        enrollmentDate: '2024-12-17'
+                        status: 'active'
+                        grade: 'A'
+    post:
+      summary: Create a new enrollment
+      tags:
+        - Enrollments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnrollmentCreateRequest'
+            example:
+              student: '603c72ef9b1d8b4f8f5b9b1b'
+              course: '603c72ef9b1d8b4f8f5b9b5f'
+      responses:
+        '201':
+          description: Enrollment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnrollmentResponse'
+              example:
+                status: success
+                data:
+                  student: '603c72ef9b1d8b4f8f5b9b1b'
+                  course: '603c72ef9b1d8b4f8f5b9b5f'
+                  enrollmentDate: '2024-12-17'
+                  status: 'active'
+                  grade: 'A'
+  /api/enrollments/{enrollmentId}:
+    delete:
+      summary: Delete an enrollment by ID
+      tags:
+        - Enrollments
+      parameters:
+        - in: path
+          name: enrollmentId
+          required: true
+          schema:
+            type: string
+            example: '603c72ef9b1d8b4f8f5b9b1b'
+      responses:
+        '204':
+          description: Enrollment deleted successfully
+        '404':
+          description: Enrollment not found
+  /api/sort/students:
+    get:
+      summary: Sort students by a specified field
+      tags:
+        - Sort
+      parameters:
+        - in: query
+          name: field
+          required: true
+          schema:
+            type: string
+            example: 'name'
+            description: The field to sort by (e.g., name, email, phone)
+        - in: query
+          name: order
+          required: false
+          schema:
+            type: string
+            enum: ['asc', 'desc']
+            default: 'asc'
+            description: Sort order (ascending or descending)
+      responses:
+        '200':
+          description: Successfully sorted students
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  field:
+                    type: string
+                    example: 'name'
+                  order:
+                    type: string
+                    example: 'asc'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Student'
+              examples:
+                sortByName:
+                  value:
+                    field: 'name'
+                    order: 'asc'
+                    data:
+                      - _id: '603c72ef9b1d8b4f8f5b9b1b'
+                        name: 'Alice Cooper'
+                        email: 'alice@example.com'
+                        phone: '+1122334455'
+                      - _id: '603c72ef9b1d8b4f8f5b9b2c'
+                        name: 'Bob Smith'
+                        email: 'bob@example.com'
+                        phone: '+1987654321'
+                sortByEmail:
+                  value:
+                    field: 'email'
+                    order: 'desc'
+                    data:
+                      - _id: '603c72ef9b1d8b4f8f5b9b2c'
+                        name: 'Bob Smith'
+                        email: 'bob@example.com'
+                        phone: '+1987654321'
+                      - _id: '603c72ef9b1d8b4f8f5b9b1b'
+                        name: 'Alice Cooper'
+                        email: 'alice@example.com'
+                        phone: '+1122334455'
+
+  /api/sort/courses:
+    get:
+      summary: Sort courses by a specified field
+      tags:
+        - Sort
+      parameters:
+        - in: query
+          name: field
+          required: true
+          schema:
+            type: string
+            example: 'name'
+            description: The field to sort by (e.g., name, code, credits)
+        - in: query
+          name: order
+          required: false
+          schema:
+            type: string
+            enum: ['asc', 'desc']
+            default: 'asc'
+            description: Sort order (ascending or descending)
+      responses:
+        '200':
+          description: Successfully sorted courses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  field:
+                    type: string
+                    example: 'name'
+                  order:
+                    type: string
+                    example: 'asc'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Course'
+              examples:
+                sortByName:
+                  value:
+                    field: 'name'
+                    order: 'asc'
+                    data:
+                      - _id: '603c72ef9b1d8b4f8f5b9b5f'
+                        name: 'Advanced Programming'
+                        code: 'CS201'
+                        description: 'Advanced programming techniques'
+                        department: 'Computer Science'
+                        credits: 4
+                      - _id: '603c72ef9b1d8b4f8f5b9b6g'
+                        name: 'Intro to Programming'
+                        code: 'CS101'
+                        description: 'Basic programming concepts'
+                        department: 'Computer Science'
+                        credits: 3
+                sortByCredits:
+                  value:
+                    field: 'credits'
+                    order: 'desc'
+                    data:
+                      - _id: '603c72ef9b1d8b4f8f5b9b5f'
+                        name: 'Advanced Programming'
+                        code: 'CS201'
+                        description: 'Advanced programming techniques'
+                        department: 'Computer Science'
+                        credits: 4
+                      - _id: '603c72ef9b1d8b4f8f5b9b6g'
+                        name: 'Intro to Programming'
+                        code: 'CS101'
+                        description: 'Basic programming concepts'
+                        department: 'Computer Science'
+                        credits: 3
+components:
+  schemas:
+    StudentListResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        results:
+          type: integer
+          example: 2
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Student'
+
+    StudentCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Alice Cooper'
+        email:
+          type: string
+          example: 'alice.cooper@example.com'
+        phone:
+          type: string
+          example: '+1122334455'
+
+    StudentResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          $ref: '#/components/schemas/Student'
+
+    Student:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: '603c72ef9b1d8b4f8f5b9b1b'
+        name:
+          type: string
+          example: 'John Doe'
+        email:
+          type: string
+          example: 'john.doe@example.com'
+        phone:
+          type: string
+          example: '+1234567890'
+
+    InstructorListResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        results:
+          type: integer
+          example: 2
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Instructor'
+
+    InstructorCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Dr. Sarah Lee'
+        email:
+          type: string
+          example: 'sarah.lee@example.com'
+        department:
+          type: string
+          example: 'Computer Science'
+
+    InstructorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          $ref: '#/components/schemas/Instructor'
+
+    Instructor:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: '603c72ef9b1d8b4f8f5b9b1c'
+        name:
+          type: string
+          example: 'Dr. Sarah Lee'
+        email:
+          type: string
+          example: 'sarah.lee@example.com'
+        department:
+          type: string
+          example: 'Computer Science'
+
+    CourseListResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        results:
+          type: integer
+          example: 2
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Course'
+
+    CourseCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Intro to Programming'
+        code:
+          type: string
+          example: 'CS101'
+        description:
+          type: string
+          example: 'Learn the basics of programming.'
+        department:
+          type: string
+          example: 'Computer Science'
+        credits:
+          type: integer
+          example: 3
+        instructors:
+          type: array
+          items:
+            type: string
+            example: '603c72ef9b1d8b4f8f5b9b1c'
+
+    CourseResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          $ref: '#/components/schemas/Course'
+
+    Course:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: '603c72ef9b1d8b4f8f5b9b1d'
+        name:
+          type: string
+          example: 'Intro to Programming'
+        code:
+          type: string
+          example: 'CS101'
+        description:
+          type: string
+          example: 'Learn the basics of programming.'
+        department:
+          type: string
+          example: 'Computer Science'
+        credits:
+          type: integer
+          example: 3
+        instructors:
+          type: array
+          items:
+            type: string
+            example: '603c72ef9b1d8b4f8f5b9b1c'
+
+    EnrollmentListResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        results:
+          type: integer
+          example: 2
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Enrollment'
+
+    EnrollmentCreateRequest:
+      type: object
+      properties:
+        student:
+          type: string
+          example: '603c72ef9b1d8b4f8f5b9b1b'
+        course:
+          type: string
+          example: '603c72ef9b1d8b4f8f5b9b1d'
+
+    EnrollmentResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          $ref: '#/components/schemas/Enrollment'
+
+    Enrollment:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: '603c72ef9b1d8b4f8f5b9b1e'
+        student:
+          type: string
+          example: '603c72ef9b1d8b4f8f5b9b1b'
+        course:
+          type: string
+          example: '603c72ef9b1d8b4f8f5b9b1d'
+        enrollmentDate:
+          type: string
+          format: date-time
+          example: '2024-01-15T08:00:00Z'
+        status:
+          type: string
+          enum: ['active', 'completed', 'dropped']
+          example: 'active'
+        grade:
+          type: string
+          enum: ['A', 'B', 'C', 'D', 'E', 'F']
+          example: 'B'
