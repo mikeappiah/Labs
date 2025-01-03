@@ -1,9 +1,15 @@
 import Course from '../models/course.mjs';
 import AppError from '../utils/AppError.mjs';
 import asyncHandler from '../utils/asyncHandler.mjs';
+import getPagination from '../utils/pagination.mjs';
 
 export const getAllCourses = asyncHandler(async (req, res) => {
-  const courses = await Course.find().populate({ path: 'instructors' });
+  const { skip, limit } = getPagination(req, next);
+
+  const courses = await Course.find()
+    .skip(skip)
+    .limit(limit)
+    .populate('instructors');
 
   res.status(200).json({
     status: 'success',

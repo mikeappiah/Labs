@@ -2,32 +2,32 @@ import AppError from '../utils/AppError.mjs';
 import logger from '../utils/logger.mjs';
 
 /* Handle specific type of errors */
-const handleCastErrorDB = (error) => {
-  const message = `Invalid ${error.path}: ${error.value}.`;
+export const handleCastErrorDB = (error) => {
+  const message = `Invalid ${error.path}:${error.value}`;
   return new AppError(message, 400);
 };
 
-const handleDuplicateFieldsDB = (error) => {
+export const handleDuplicateFieldsDB = (error) => {
   const field = Object.keys(error.keyValue)[0];
   const value = error.keyValue[field];
-  const message = `Duplicate field value: ${value} . Please use another value`;
+  const message = `Duplicate field value:${value}. Please use another value`;
   return new AppError(message, 400);
 };
 
-const handleValidationErrorDB = (error) => {
+export const handleValidationErrorDB = (error) => {
   const errors = Object.values(error.errors).map((el) => el.message);
   const message = `Invalid input data: ${errors.join('. ')}`;
   return new AppError(message, 400);
 };
 
-const handleJWTError = () =>
+export const handleJWTError = () =>
   new AppError('Invalid token. Please log in again.', 401);
 
-const handleJWTExpiredError = () =>
+export const handleJWTExpiredError = () =>
   new AppError('Your token has expired. Please log in again.', 401);
 
 /* Development error response */
-const sendDevError = (err, res) => {
+export const sendDevError = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
     error: err,
@@ -37,7 +37,7 @@ const sendDevError = (err, res) => {
 };
 
 /* Production error response */
-const sendProdError = (error, res) => {
+export const sendProdError = (error, res) => {
   if (error instanceof AppError) {
     res.status(error.statusCode).json({
       status: error.status,

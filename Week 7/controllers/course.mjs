@@ -1,9 +1,15 @@
 import Course from '../models/course.mjs';
 import AppError from '../utils/AppError.mjs';
 import asyncHandler from '../utils/asyncHandler.mjs';
+import getPagination from '../utils/pagination.mjs';
 
-export const getAllCourses = asyncHandler(async (req, res) => {
-  const courses = await Course.find().populate({ path: 'instructors' });
+export const getAllCourses = asyncHandler(async (req, res, next) => {
+  const { skip, limit } = getPagination(req, next);
+
+  const courses = await Course.find()
+    .skip(skip)
+    .limit(limit)
+    .populate('instructors');
 
   res.status(200).json({
     status: 'success',
@@ -24,7 +30,7 @@ export const getCourse = asyncHandler(async (req, res, next) => {
   });
 });
 
-export const createCourse = asyncHandler(async (req, res) => {
+export const createCourse = asyncHandler(async (req, res, next) => {
   const newCourse = await Course.create(req.body);
 
   res.status(201).json({
@@ -61,7 +67,7 @@ export const deleteCourse = asyncHandler(async (req, res, next) => {
   }
 
   res.status(204).json({
-    staus: 'success',
+    status: 'success',
     data: null,
   });
 });

@@ -3,9 +3,11 @@ import Course from '../models/course.mjs';
 import Enrollment from '../models/enrollment.mjs';
 import asyncHandler from '../utils/asyncHandler.mjs';
 import AppError from '../utils/AppError.mjs';
+import getPagination from '../utils/pagination.mjs';
 
-export const getAllEnrollments = asyncHandler(async (req, res) => {
-  const enrollments = await Enrollment.find();
+export const getAllEnrollments = asyncHandler(async (req, res, next) => {
+  const { skip, limit } = getPagination(req, next);
+  const enrollments = await Enrollment.find().skip(skip).limit(limit);
 
   res.status(200).json({
     status: 'success',
@@ -93,13 +95,13 @@ export const deleteEnrollment = asyncHandler(async (req, res, next) => {
   );
 
   if (!enrollment) {
-    return next(new AppError('No enrollment found with that ID'));
+    return next(new AppError('No enrollment found with that ID', 404));
   }
 
   const student = await Student.findById(enrollment.student);
 
   if (!student) {
-    return next(new AppError('No student found with that ID'));
+    return next(new AppError('No student found with that ID', 404));
   }
 
   student.courses = student.courses.filter(

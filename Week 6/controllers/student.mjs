@@ -1,15 +1,10 @@
 import Student from '../models/student.mjs';
 import asyncHandler from '../utils/asyncHandler.mjs';
 import AppError from '../utils/AppError.mjs';
+import getPagination from '../utils/pagination.mjs';
 
 export const getAllStudents = asyncHandler(async (req, res) => {
-  const page = parseInt(req.query.page, 10) || 1;
-  const limit = parseInt(req.query.limit, 10) || 100;
-  const skip = (page - 1) * limit;
-
-  if (page < 1 || limit < 1) {
-    return next(new AppError('Invalid page or limit parameter', 400));
-  }
+  const { skip, limit } = getPagination(req, next);
 
   const students = await Student.find().skip(skip).limit(limit);
 

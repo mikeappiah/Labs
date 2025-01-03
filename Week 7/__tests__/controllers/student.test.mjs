@@ -1,6 +1,5 @@
-import Student from '../models/student.mjs';
-import AppError from '../utils/AppError.mjs';
-import APIFeatures from '../utils/APIFeatures.mjs';
+import Student from '../../models/student.mjs';
+import AppError from '../../utils/AppError.mjs';
 
 import {
   getAllStudents,
@@ -8,14 +7,27 @@ import {
   createStudent,
   updateStudent,
   deleteStudent,
-} from '../controllers/student.mjs';
+} from '../../controllers/student.mjs';
 
-import mockAPIFeatures from '../__mocks__/mockAPIFeatutes.mjs';
+jest.mock('../../models/student.mjs');
+jest.mock('../../utils/AppError.mjs', () => {
+  return jest.fn().mockImplementation((message, statusCode) => ({
+    message,
+    statusCode,
+  }));
+});
 
-/* Mock dependencies */
-jest.mock('../models/student.mjs');
-jest.mock('../utils/AppError.mjs');
-jest.mock('../utils/APIFeatures');
+jest.mock('../../utils/asyncHandler.mjs', () => {
+  return (fn) => {
+    return async (req, res, next) => {
+      try {
+        await fn(req, res, next);
+      } catch (error) {
+        next(error);
+      }
+    };
+  };
+});
 
 describe('Student Controller', () => {
   let mockRequest;
@@ -38,45 +50,20 @@ describe('Student Controller', () => {
 
   describe('getAllStudents', () => {
     const mockStudents = [
-      { id: 1, firstName: 'Mike', lastName: 'Appiah' },
-      { id: 2, firstName: 'John', lastName: 'Doe' },
+      { id: '1', firstName: 'Michael', lastName: 'Appiah' },
+      { id: '2', firstName: 'Emmanuel', lastName: 'Asidigbe' },
     ];
 
-    it('should get all students and handle API features with query parameters', async () => {
-      // Set up initial mock
-      mockAPIFeatures(mockStudents);
+    it('should get all students successfully', async () => {
+      mockRequest.query = { page: 1, limit: 10 };
 
-      // Test case 1: Without query parameters
-      await getAllStudents(mockRequest, mockResponse);
+      Student.find.mockImplementation(() => ({
+        skip: jest.fn(() => ({
+          limit: jest.fn().mockResolvedValue(mockStudents),
+        })),
+      }));
 
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        status: 'success',
-        results: mockStudents.length,
-        data: mockStudents,
-      });
-
-      // Clear mocks for second test case
-      jest.clearAllMocks();
-      mockResponse.status.mockReturnThis(); // Restore the chain
-
-      // Test case 2: With query parameters
-      mockRequest.query = {
-        page: '1',
-        limit: '10',
-        sort: 'lastName',
-        fields: 'firstName,lastName',
-      };
-
-      // Set up mock again for second test case
-      mockAPIFeatures(mockStudents);
-
-      await getAllStudents(mockRequest, mockResponse);
-
-      expect(APIFeatures).toHaveBeenCalledWith(
-        expect.anything(),
-        mockRequest.query,
-      );
+      await getAllStudents(mockRequest, mockResponse, mockNext);
 
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledWith({
@@ -86,10 +73,14 @@ describe('Student Controller', () => {
       });
     });
 
-    it('should handle empty results', async () => {
-      mockAPIFeatures([]);
+    it('should handle no students found', async () => {
+      mockRequest.query = { page: 1, limit: 10 };
+      Student.find.mockReturnValue({
+        skip: jest.fn().mockReturnThis(),
+        limit: jest.fn().mockResolvedValue([]),
+      });
 
-      await getAllStudents(mockRequest, mockResponse);
+      await getAllStudents(mockRequest, mockResponse, mockNext);
 
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledWith({
@@ -109,6 +100,7 @@ describe('Student Controller', () => {
 
       await getStudent(mockRequest, mockResponse, mockNext);
 
+      expect(Student.findById).toHaveBeenCalledWith(mockRequest.params.id);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledWith({
         status: 'success',
@@ -116,12 +108,13 @@ describe('Student Controller', () => {
       });
     });
 
-    it('should handle student not found', async () => {
+    it('should handle a student not found', async () => {
       mockRequest.params.id = 'nonexistent';
       Student.findById.mockResolvedValue(null);
 
       await getStudent(mockRequest, mockResponse, mockNext);
 
+      expect(Student.findById).toHaveBeenCalledWith(mockRequest.params.id);
       expect(mockNext).toHaveBeenCalledWith(
         new AppError('No student found with that ID', 404),
       );
@@ -135,8 +128,9 @@ describe('Student Controller', () => {
       mockRequest.body = newStudent;
       Student.create.mockResolvedValue(newStudent);
 
-      await createStudent(mockRequest, mockResponse);
+      await createStudent(mockRequest, mockResponse, mockNext);
 
+      expect(Student.create).toHaveBeenCalledWith(mockRequest.body);
       expect(mockResponse.status).toHaveBeenCalledWith(201);
       expect(mockResponse.json).toHaveBeenCalledWith({
         status: 'success',
@@ -155,6 +149,11 @@ describe('Student Controller', () => {
 
       await updateStudent(mockRequest, mockResponse, mockNext);
 
+      expect(Student.findByIdAndUpdate).toHaveBeenCalledWith(
+        mockRequest.params.id,
+        mockRequest.body,
+        { new: true, runValidators: true },
+      );
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledWith({
         status: 'success',
@@ -168,6 +167,11 @@ describe('Student Controller', () => {
 
       await updateStudent(mockRequest, mockResponse, mockNext);
 
+      expect(Student.findByIdAndUpdate).toHaveBeenCalledWith(
+        mockRequest.params.id,
+        mockRequest.body,
+        { new: true, runValidators: true },
+      );
       expect(mockNext).toHaveBeenCalledWith(
         new AppError('No student found with that ID', 404),
       );
@@ -181,6 +185,9 @@ describe('Student Controller', () => {
 
       await deleteStudent(mockRequest, mockResponse, mockNext);
 
+      expect(Student.findByIdAndDelete).toHaveBeenCalledWith(
+        mockRequest.params.id,
+      );
       expect(mockResponse.status).toHaveBeenCalledWith(204);
       expect(mockResponse.json).toHaveBeenCalledWith({
         status: 'success',
@@ -194,6 +201,9 @@ describe('Student Controller', () => {
 
       await deleteStudent(mockRequest, mockResponse, mockNext);
 
+      expect(Student.findByIdAndDelete).toHaveBeenCalledWith(
+        mockRequest.params.id,
+      );
       expect(mockNext).toHaveBeenCalledWith(
         new AppError('No student found with that ID', 404),
       );

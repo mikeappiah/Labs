@@ -6,12 +6,12 @@ import AppError from '../utils/AppError.mjs';
 import Student from '../models/student.mjs';
 import User from '../models/user.mjs';
 
-const signToken = (payload) =>
+export const signToken = (payload) =>
   jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
-const createSendToken = (user, statusCode, res) => {
+export const createSendToken = (user, statusCode, res) => {
   const payload = {
     id: user._id,
     email: user.email,
@@ -40,11 +40,6 @@ const createSendToken = (user, statusCode, res) => {
 
 export const signup = asyncHandler(async (req, res, next) => {
   const newStudent = await Student.create(req.body);
-
-  res.status(201).json({
-    status: 'success',
-    data: newStudent,
-  });
 
   createSendToken(newStudent, 201, res);
 });
@@ -103,7 +98,6 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
     return next(new AppError('Token is invalid or has expired', 400));
   }
   user.password = req.body.password;
-  user.passwordConfirm = req.body.passwordConfirm;
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
 

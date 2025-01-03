@@ -1,15 +1,12 @@
 import Student from '../models/student.mjs';
 import asyncHandler from '../utils/asyncHandler.mjs';
 import AppError from '../utils/AppError.mjs';
-import APIFeatures from '../utils/APIFeatures.mjs';
+import getPagination from '../utils/pagination.mjs';
 
-export const getAllStudents = asyncHandler(async (req, res) => {
-  const features = new APIFeatures(Student.find(), req.query)
-    .filter()
-    .limitFields()
-    .paginate();
+export const getAllStudents = asyncHandler(async (req, res, next) => {
+  const { skip, limit } = getPagination(req, next);
 
-  const students = await features.query;
+  const students = await Student.find().skip(skip).limit(limit);
 
   res.status(200).json({
     status: 'success',
@@ -31,7 +28,7 @@ export const getStudent = asyncHandler(async (req, res, next) => {
   });
 });
 
-export const createStudent = asyncHandler(async (req, res) => {
+export const createStudent = asyncHandler(async (req, res, next) => {
   const newStudent = await Student.create(req.body);
 
   res.status(201).json({

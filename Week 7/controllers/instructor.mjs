@@ -1,8 +1,10 @@
 import Instructor from '../models/instructor.mjs';
 import asyncHandler from '../utils/asyncHandler.mjs';
+import getPagination from '../utils/pagination.mjs';
 
-export const getAllInstructors = asyncHandler(async (req, res) => {
-  const instructors = await Instructor.find();
+export const getAllInstructors = asyncHandler(async (req, res, next) => {
+  const { skip, limit } = getPagination(req, next);
+  const instructors = await Instructor.find().skip(skip).limit(limit);
 
   res.status(200).json({
     status: 'success',

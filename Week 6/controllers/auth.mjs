@@ -41,11 +41,6 @@ const createSendToken = (user, statusCode, res) => {
 export const signup = asyncHandler(async (req, res, next) => {
   const newStudent = await Student.create(req.body);
 
-  res.status(201).json({
-    status: 'success',
-    data: newStudent,
-  });
-
   createSendToken(newStudent, 201, res);
 });
 
@@ -103,7 +98,6 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
     return next(new AppError('Token is invalid or has expired', 400));
   }
   user.password = req.body.password;
-  user.passwordConfirm = req.body.passwordConfirm;
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
 
