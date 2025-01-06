@@ -172,10 +172,7 @@ paths:
                   type: string
                   format: password
                   example: 'NewStrongPassword123!'
-                passwordConfirm:
-                  type: string
-                  format: password
-                  example: 'NewStrongPassword123!'
+
       responses:
         200:
           description: Password reset successful

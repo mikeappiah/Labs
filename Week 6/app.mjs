@@ -20,7 +20,7 @@ const app = express();
 /* connect to local mongodb database */
 (async () => {
   try {
-    await mongoose.connect(process.env.mongoURI);
+    await mongoose.connect(process.env.MONGO_URI);
     logger.info('Database connection successful');
   } catch (error) {
     logger.error(error.message);
