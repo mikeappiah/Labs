@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
 import asyncHandler from '../utils/asyncHandler.mjs';
+import Student from '../models/student.mjs';
+import Instructor from '../models/instructor.mjs';
 import User from '../models/user.mjs';
 import AppError from '../utils/AppError.mjs';
 
@@ -21,6 +23,7 @@ const protectRoute = asyncHandler(async (req, res, next) => {
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
   const currentUser = await User.findById(decoded.id);
+
   if (!currentUser) {
     return next(
       new AppError(

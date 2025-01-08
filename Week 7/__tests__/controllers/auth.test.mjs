@@ -2,14 +2,12 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import crypto from 'node:crypto';
 
-import Student from '../../models/student.mjs';
 import User from '../../models/user.mjs';
 import AppError from '../../utils/AppError.mjs';
 
 import {
   signToken,
   createSendToken,
-  signup,
   login,
   forgotPassword,
   resetPassword,
@@ -136,29 +134,6 @@ describe('Auth Controller', () => {
     });
   });
 
-  describe('signup', () => {
-    const newStudent = {
-      id: '1',
-      email: 'test@example.com',
-      password: 'password',
-    };
-
-    it('should create a new student and send token', async () => {
-      mockRequest.body = newStudent;
-      Student.create = jest.fn().mockResolvedValue(newStudent);
-
-      await signup(mockRequest, mockResponse, mockNext);
-
-      expect(Student.create).toHaveBeenCalledWith(newStudent);
-      expect(mockResponse.status).toHaveBeenCalledWith(201);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        status: 'success',
-        token: expect.any(String),
-        data: { ...newStudent, password: undefined },
-      });
-    });
-  });
-
   describe('login', () => {
     const user = {
       id: '1',
@@ -259,7 +234,6 @@ describe('Auth Controller', () => {
     const user = {
       id: '1',
       password: 'newpassword',
-      passwordConfirm: 'newpassword',
       save: jest.fn(),
     };
 

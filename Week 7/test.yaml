@@ -1,0 +1,203 @@
+config:
+  target: 'http://localhost:8000'
+  phases:
+    - duration: 60 # Run the test for 60 seconds
+      arrivalRate: 10 # 10 requests per second
+  variables:
+    defaultEmail: 'johndoe@staff.university.edu'
+    defaultPassword: 'Str0ngPassword123!'
+    studentSortFields: ['firstName', 'lastName', 'email', 'studentId']
+    courseSortFields: ['name', 'code', 'department']
+    sortOrders: ['asc', 'desc']
+
+before:
+  flow:
+    - post:
+        url: '/api/auth/login'
+        json:
+          email: '{{ defaultEmail }}'
+          password: '{{ defaultPassword }}'
+        capture:
+          - json: '$.token'
+            as: 'authToken'
+        expect:
+          - statusCode: 200
+          - hasProperty: 'token'
+          - hasProperty: 'status'
+          - equals:
+              - '$.status'
+              - 'success'
+
+scenarios:
+  # Auth Routes
+  - name: 'Test /api/auth/login'
+    flow:
+      - post:
+          url: '/api/auth/login'
+          json:
+            email: 'user1@example.com'
+            password: 'password1'
+
+  - name: 'Test /api/auth/forgot-password'
+    flow:
+      - post:
+          url: '/api/auth/forgot-password'
+          json:
+            email: 'user1@example.com'
+
+  - name: 'Test /api/auth/password-reset'
+    flow:
+      - patch:
+          url: '/api/auth/password-reset/fake-token'
+          json:
+            password: 'newpassword123'
+
+  # Enrollment Routes
+  - name: 'Test GET /api/enrollments'
+    flow:
+      - get:
+          url: '/api/enrollments'
+          headers:
+            Authorization: 'Bearer {{ authToken }}'
+
+  - name: 'Test POST /api/enrollments'
+    flow:
+      - post:
+          url: '/api/enrollments'
+          headers:
+            Authorization: 'Bearer {{ authToken }}'
+          json:
+            studentId: '12345'
+            courseCode: 'CS101'
+
+  - name: 'Test GET /api/enrollments/student/:studentId'
+    flow:
+      - get:
+          url: '/api/enrollments/student/12345'
+          headers:
+            Authorization: 'Bearer {{ authToken }}'
+
+  - name: 'Test GET /api/enrollments/course/:courseCode'
+    flow:
+      - get:
+          url: '/api/enrollments/course/CS101'
+          headers:
+            Authorization: 'Bearer {{ authToken }}'
+
+  - name: 'Test DELETE /api/enrollments/:enrollmentId'
+    flow:
+      - delete:
+          url: '/api/enrollments/E001'
+          headers:
+            Authorization: 'Bearer {{ authToken }}'
+
+  # Course Routes
+  - name: 'Test GET /api/courses'
+    flow:
+      - get:
+          url: '/api/courses'
+          headers:
+            Authorization: 'Bearer {{ authToken }}'
+
+  - name: 'Test POST /api/courses'
+    flow:
+      - post:
+          url: '/api/courses'
+          headers:
+            Authorization: 'Bearer {{ authToken }}'
+          json:
+            name: 'Introduction to Programming'
+            code: 'CS101'
+            description: 'Learn the basics of programming with Python.'
+            instructors: ['24683', '32410']
+            department: 'Computer Science'
+
+  - name: 'Test GET /api/courses/:courseCode'
+    flow:
+      - get:
+          url: '/api/courses/CS101'
+          headers:
+            Authorization: 'Bearer {{ authToken }}'
+
+  - name: 'Test PATCH /api/courses/:courseCode'
+    flow:
+      - patch:
+          url: '/api/courses/CS101'
+          headers:
+            Authorization: 'Bearer {{ authToken }}'
+          json:
+            name: 'Updated Course Name'
+
+  - name: 'Test DELETE /api/courses/:courseCode'
+    flow:
+      - delete:
+          url: '/api/courses/CS101'
+          headers:
+            Authorization: 'Bearer {{ authToken }}'
+
+  # Student Routes
+  - name: 'Test GET /api/students'
+    flow:
+      - get:
+          url: '/api/students'
+          headers:
+            Authorization: 'Bearer {{ authToken }}'
+
+  - name: 'Test POST /api/students'
+    flow:
+      - post:
+          url: '/api/students'
+          headers:
+            Authorization: 'Bearer {{ authToken }}'
+          json:
+            studentId: '12345'
+            firstName: 'John'
+            lastName: 'Doe'
+            email: 'johndoe@example.com'
+
+  - name: 'Test GET /api/students/:id'
+    flow:
+      - get:
+          url: '/api/students/12345'
+
+  - name: 'Test PATCH /api/students/:id'
+    flow:
+      - patch:
+          url: '/api/students/12345'
+          json:
+            firstName: 'Updated first name'
+
+  - name: 'Test DELETE /api/students/:id'
+    flow:
+      - delete:
+          url: '/api/students/12345'
+          headers:
+            Authorization: 'Bearer {{ authToken }}'
+
+  # Instructor Routes
+  - name: 'Test GET /api/instructors'
+    flow:
+      - get:
+          url: '/api/instructors'
+
+  - name: 'Test POST /api/instructors'
+    flow:
+      - post:
+          url: '/api/instructors'
+          json:
+            instructorId: '24683'
+            firstName: 'Nikola'
+            lastName: 'Tesla'
+            email: 'nikolatesla@example.com'
+            department: 'Physics'
+
+  # Sort Routes
+  - name: 'Test GET /api/sort/students'
+    flow:
+      - get:
+          url: '/api/sort/students?field={{ studentSortFields }}&order={{ sortOrders }}'
+
+  - name: 'Test GET /api/sort/courses'
+    flow:
+      - get:
+          url: '/api/sort/courses?field={{ courseSortFields }}&order={{ sortOrders }}'

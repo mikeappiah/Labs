@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.5% </span>
+                <span class="strong">31.25% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>14/16</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">25% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>1/4</span>
+                <span class='fraction'>5/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
-                <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.5% </span>
+                <span class="strong">0% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>0/1</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">31.25% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>14/16</span>
+                <span class='fraction'>5/16</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -82,33 +82,33 @@
 <a name='L17'></a><a href='#L17'>17</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import AppError from './AppError.mjs';
 &nbsp;
-const getPagination = (req, next) =&gt; {
-  const page = parseInt(req.query.page, 10)<span class="branch-0 cbranch-no" title="branch not covered" > || 1;</span>
-  const limit = parseInt(req.query.limit, 10)<span class="branch-0 cbranch-no" title="branch not covered" > || 100;</span>
-&nbsp;
-  if (page &lt; 1 || limit &lt; 1) <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
+const getPagination = <span class="fstat-no" title="function not covered" >(req, next) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  const page = parseInt(req.query.page, 10) || 1;</span>
+<span class="cstat-no" title="statement not covered" >  const limit = parseInt(req.query.limit, 10) || 100;</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  if (page &lt; 1 || limit &lt; 1) {</span>
 <span class="cstat-no" title="statement not covered" >    return next(new AppError('Invalid page or limit parameter', 400));</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-  const skip = (page - 1) * limit;
-&nbsp;
-  return { limit, skip };
-};
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  const skip = (page - 1) * limit;</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  return { limit, skip };</span>
+<span class="cstat-no" title="statement not covered" >};</span>
 &nbsp;
 export default getPagination;
 &nbsp;</pre></td></tr></table></pre>
@@ -118,7 +118,7 @@ export default getPagination;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-01-03T09:51:20.901Z
+                at 2025-01-04T20:50:29.667Z
             </div>
         <script src="../prettify.js"></script>
         <script>

@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">74.19% </span>
+                <span class="strong">89.24% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>69/93</span>
+                <span class='fraction'>83/93</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>1/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">74.19% </span>
+                <span class="strong">89.24% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>69/93</span>
+                <span class='fraction'>83/93</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -211,24 +211,24 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -304,24 +304,24 @@ const userSchema = new mongoose.Schema(
 &nbsp;
 /* document middleware to hash password before saving into db */
 userSchema.pre('save', async function (next) {
-<span class="cstat-no" title="statement not covered" >  if (!this.isModified('password')) return next();</span>
-<span class="cstat-no" title="statement not covered" >  this.password = await bcrypt.hash(this.password, 12);</span>
-<span class="cstat-no" title="statement not covered" >  next();</span>
+  if (!this.isModified('password')) return next();
+  this.password = await bcrypt.hash(this.password, 12);
+  next();
 });
 &nbsp;
 /* instance method to create a random password reset token */
-userSchema.methods.createPasswordResetToken = <span class="fstat-no" title="function not covered" >function () {</span>
-<span class="cstat-no" title="statement not covered" >  const resetToken = crypto.randomBytes(32).toString('hex');</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  this.passwordResetToken = crypto</span>
-<span class="cstat-no" title="statement not covered" >    .createHash('sha256')</span>
-<span class="cstat-no" title="statement not covered" >    .update(resetToken)</span>
-<span class="cstat-no" title="statement not covered" >    .digest('hex');</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  this.passwordResetExpires = Date.now() + 30 * 60 * 10000; // expires in 30 minutes</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  return resetToken;</span>
-<span class="cstat-no" title="statement not covered" >};</span>
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+&nbsp;
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+&nbsp;
+  this.passwordResetExpires = Date.now() + 30 * 60 * 10000; // expires in 30 minutes
+&nbsp;
+  return resetToken;
+};
 &nbsp;
 /* instance method to check if user changed password after the jwt token was issued */
 userSchema.methods.changedPasswordAfter = <span class="fstat-no" title="function not covered" >function (JWTTimestamp) {</span>
@@ -349,7 +349,7 @@ export default User;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-01-03T09:51:20.901Z
+                at 2025-01-04T21:33:30.560Z
             </div>
         <script src="../prettify.js"></script>
         <script>

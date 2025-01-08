@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import asyncHandler from '../utils/asyncHandler.mjs';
 import AppError from '../utils/AppError.mjs';
-import Student from '../models/student.mjs';
 import User from '../models/user.mjs';
 
 export const signToken = (payload) =>
@@ -37,12 +36,6 @@ export const createSendToken = (user, statusCode, res) => {
     data: user,
   });
 };
-
-export const signup = asyncHandler(async (req, res, next) => {
-  const newStudent = await Student.create(req.body);
-
-  createSendToken(newStudent, 201, res);
-});
 
 export const login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
@@ -100,8 +93,13 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
   user.password = req.body.password;
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
+  user.passwordChangedAt = Date.now();
 
-  await user.save();
+  try {
+    await user.save();
+  } catch (err) {
+    return next(new AppError('Error updating password', 500));
+  }
 
   createSendToken(user, 200, res);
 });
